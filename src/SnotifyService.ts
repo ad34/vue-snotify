@@ -425,13 +425,13 @@ export class SnotifyService {
    */
   @SetToastType
    async(args: any): SnotifyToast {
-    let async = args.action;
+    const asyncFnc = args.action instanceof Promise ? args.action : args.action();
 
     const toast = this.create(args);
 
     toast.on('mounted',
       () => {
-      async()
+        asyncFnc
         .then((next: Snotify) => this.mergeToast(toast, next, SnotifyStyle.success))
         .catch((error?: Snotify) => this.mergeToast(toast, error, SnotifyStyle.error));
       }
